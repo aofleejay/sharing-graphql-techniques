@@ -6,6 +6,9 @@ import authorModel from '../models/author'
 const typeDefs = gql`
   type Query {
     books: [Book]
+    book(id: String): Book
+    authors: [Author]
+    author(id: String): Author
   }
 
   type Mutation {
@@ -14,13 +17,13 @@ const typeDefs = gql`
   }
 
   type Book @cacheControl(maxAge: 240) {
-    _id: String
+    id: String
     title: String
     author: Author
   }
 
   type Author @cacheControl(maxAge: 240) {
-    _id: String
+    id: String
     name: String
     books: [Book]
   }
@@ -29,16 +32,21 @@ const typeDefs = gql`
 const resolvers = {
   Query: {
     books: () => bookModel.find(),
+    book: (root, args) => bookModel.findOne({ _id: args.id }),
+    authors: () => authorModel.find(),
+    author: (root, args) => authorModel.findOne({ _id: args.id }),
   },
   Mutation: {
     createBook: (root, args) => bookModel.create(args),
     createAuthor: (root, args) => authorModel.create(args),
   },
   Book: {
+    id: (root) => root._id,
     author: (root) => authorModel.findOne({ _id: root.authorId }),
   },
   Author: {
-    books: (root) => bookModel.find({ authorId: root._id })
+    id: (root) => root._id,
+    books: (root) => bookModel.find({ authorId: root.id })
   },
 }
 
