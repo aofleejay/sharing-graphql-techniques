@@ -2,6 +2,7 @@ import { ApolloServer, gql } from 'apollo-server-express'
 import { ApolloEngine } from 'apollo-engine'
 import express from 'express'
 import mongoose from 'mongoose'
+import { express as voyagerMiddleware } from 'graphql-voyager/middleware'
 import schema from './schemas'
 import {
   DATABASE_URL,
@@ -14,6 +15,7 @@ mongoose.connect(DATABASE_URL).then(
 )
 
 const app = express()
+app.use('/voyager', voyagerMiddleware({ endpointUrl: '/graphql' }))
 const server = new ApolloServer({
   schema,
   tracing: true,
@@ -31,5 +33,5 @@ engine.listen({
   port: 4000,
   expressApp: app,
 }, () => {
-  console.log('🚀  Server ready at http://localhost:4000')
+  console.log('🚀  Server ready at http://localhost:4000/graphql')
 })

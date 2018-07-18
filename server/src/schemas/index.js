@@ -19,9 +19,10 @@ const typeDefs = gql`
     author: Author
   }
 
-  type Author  @cacheControl(maxAge: 240) {
+  type Author @cacheControl(maxAge: 240) {
     _id: String
     name: String
+    books: [Book]
   }
 `
 
@@ -35,6 +36,9 @@ const resolvers = {
   },
   Book: {
     author: (root) => authorModel.findOne({ _id: root.authorId }),
+  },
+  Author: {
+    books: (root) => bookModel.find({ authorId: root._id })
   },
 }
 
