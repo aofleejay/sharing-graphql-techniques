@@ -1,6 +1,7 @@
 import { ApolloServer, gql } from 'apollo-server-express'
 import { ApolloEngine } from 'apollo-engine'
 import express from 'express'
+import cors from 'cors'
 import mongoose from 'mongoose'
 import { express as voyagerMiddleware } from 'graphql-voyager/middleware'
 import schema from './schemas'
@@ -15,6 +16,7 @@ mongoose.connect(DATABASE_URL).then(
 )
 
 const app = express()
+app.use(cors())
 app.use('/voyager', voyagerMiddleware({ endpointUrl: '/graphql' }))
 const server = new ApolloServer({
   schema,
@@ -27,6 +29,11 @@ server.applyMiddleware({ app })
 
 const engine = new ApolloEngine({
   apiKey: APOLLO_ENGINE_API_KEY,
+  frontends: [{
+    overrideGraphqlResponseHeaders: {
+      'Access-Control-Allow-Origin': '*',
+    },
+  }],
 })
 
 engine.listen({
