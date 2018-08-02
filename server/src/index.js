@@ -19,7 +19,7 @@ mongoose.connect(DATABASE_URL).then(
 
 const app = express()
 app.use(cors())
-app.use('/voyager', voyagerMiddleware({ endpointUrl: '/graphql' }))
+app.use('/voyager', voyagerMiddleware({ endpointUrl: '/graphql', displayOptions: { sortByAlphabet: true } }))
 const server = new ApolloServer({
   schema,
   tracing: true,
@@ -27,7 +27,6 @@ const server = new ApolloServer({
   engine: false,
   context: { loaders },
   validationRules: [depthLimit(5)],
-  introspection: true
 })
 
 server.applyMiddleware({ app })
