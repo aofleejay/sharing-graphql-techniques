@@ -1,8 +1,8 @@
+import { gql } from 'apollo-server-express'
 import mongoose from 'mongoose'
 import bookModel from '../models/book'
-import authorModel from '../models/author'
 
-const typeDefs = `
+const typeDefs = gql`
   extend type Query {
     books: [Book]
     book(id: String): Book

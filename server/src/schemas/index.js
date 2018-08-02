@@ -1,4 +1,4 @@
-import { makeExecutableSchema } from 'apollo-server-express'
+import { makeExecutableSchema, gql } from 'apollo-server-express'
 import merge from 'lodash.merge'
 import {
   typeDefs as bookTypeDefs,
@@ -9,7 +9,7 @@ import {
   resolvers as authorResolvers,
 } from './author'
 
-const query = `
+const query = gql`
   type Query {
     _empty: String
   }
