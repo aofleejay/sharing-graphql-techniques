@@ -4,6 +4,7 @@ import express from 'express'
 import cors from 'cors'
 import mongoose from 'mongoose'
 import { express as voyagerMiddleware } from 'graphql-voyager/middleware'
+import depthLimit from 'graphql-depth-limit'
 import schema from './schemas'
 import loaders from './loaders'
 import {
@@ -25,6 +26,7 @@ const server = new ApolloServer({
   cacheControl: true,
   engine: false,
   context: { loaders },
+  validationRules: [depthLimit(5)]
 })
 
 server.applyMiddleware({ app })
