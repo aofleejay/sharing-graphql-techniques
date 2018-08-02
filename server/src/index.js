@@ -4,7 +4,9 @@ import express from 'express'
 import cors from 'cors'
 import mongoose from 'mongoose'
 import { express as voyagerMiddleware } from 'graphql-voyager/middleware'
+import Dataloader from 'dataloader'
 import schema from './schemas'
+import authorModel from './models/author'
 import {
   DATABASE_URL,
   APOLLO_ENGINE_API_KEY,
@@ -15,6 +17,10 @@ mongoose.connect(DATABASE_URL).then(
   err => console.error('Failed to connect database', err),
 )
 
+const getAuthorsByIds = (ids) => Promise.all(ids.map(id => authorModel.findOne({ _id: id })))
+
+const authorLoader = new Dataloader(keys => getAuthorsByIds(keys))
+
 const app = express()
 app.use(cors())
 app.use('/voyager', voyagerMiddleware({ endpointUrl: '/graphql' }))
@@ -23,6 +29,9 @@ const server = new ApolloServer({
   tracing: true,
   cacheControl: true,
   engine: false,
+  context: {
+    loaders: { authorLoader },
+  },
 })
 
 server.applyMiddleware({ app })

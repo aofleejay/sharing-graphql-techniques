@@ -29,7 +29,7 @@ const resolvers = {
   },
   Book: {
     id: (root) => root._id,
-    author: (root) => authorModel.findOne({ _id: root.authorId }),
+    author: (root, args, context) => context.loaders.authorLoader.load(root.authorId),
   }
 }
 

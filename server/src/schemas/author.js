@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 import authorModel from '../models/author'
+import bookModel from '../models/book'
 
 const typeDefs = `
   extend type Query {
