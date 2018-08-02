@@ -10,12 +10,18 @@ const typeDefs = gql`
   }
 
   extend type Mutation {
-    createAuthor(name: String): Author
+    createAuthor(author: AuthorInput!): Author
+  }
+
+  input AuthorInput {
+    name: String!
+    email: String @constraint(format: "email")
   }
 
   type Author @cacheControl(maxAge: 240) {
-    id: String
-    name: String
+    id: String!
+    name: String!
+    email: String
     books: [Book]
   }
 `
@@ -26,7 +32,7 @@ const resolvers = {
     author: (root, args) => authorModel.findOne({ _id: args.id }),
   },
   Mutation: {
-    createAuthor: (root, args) => authorModel.create(args),
+    createAuthor: (root, args) => authorModel.create(args.author),
   },
   Author: {
     id: (root) => root._id,

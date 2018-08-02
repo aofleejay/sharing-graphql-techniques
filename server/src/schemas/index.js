@@ -1,4 +1,5 @@
 import { makeExecutableSchema, gql } from 'apollo-server-express'
+import ConstraintDirective from 'graphql-constraint-directive'
 import merge from 'lodash.merge'
 import {
   typeDefs as bookTypeDefs,
@@ -22,6 +23,7 @@ const query = gql`
 const schema = makeExecutableSchema({
   typeDefs: [query, bookTypeDefs, authorTypeDefs],
   resolvers: merge(bookResolvers, authorResolvers),
+  schemaDirectives: { constraint: ConstraintDirective },
 })
 
 export default schema
