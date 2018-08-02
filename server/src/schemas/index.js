@@ -1,5 +1,4 @@
 import { makeExecutableSchema, gql } from 'apollo-server-express'
-import ConstraintDirective from 'graphql-constraint-directive'
 import merge from 'lodash.merge'
 import {
   typeDefs as bookTypeDefs,
@@ -9,21 +8,22 @@ import {
   typeDefs as authorTypeDefs,
   resolvers as authorResolvers,
 } from './author'
+import directives from '../directives'
 
 const query = gql`
   type Query {
-    _empty: String
+    _empty: String @deprecated(reason: "Root query for extend")
   }
 
   type Mutation {
-    _empty: String
+    _empty: String @deprecated(reason: "Root mutation for extend")
   }
 `
 
 const schema = makeExecutableSchema({
   typeDefs: [query, bookTypeDefs, authorTypeDefs],
   resolvers: merge(bookResolvers, authorResolvers),
-  schemaDirectives: { constraint: ConstraintDirective },
+  schemaDirectives: directives,
 })
 
 export default schema

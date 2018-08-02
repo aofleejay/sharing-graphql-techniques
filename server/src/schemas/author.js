@@ -15,12 +15,12 @@ const typeDefs = gql`
 
   input AuthorInput {
     name: String!
-    email: String @constraint(format: "email")
+    email: String @constraint(pattern: "email")
   }
 
   type Author @cacheControl(maxAge: 240) {
     id: String!
-    name: String!
+    name: String! @lowerCase
     email: String
     books: [Book]
   }

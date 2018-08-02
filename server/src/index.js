@@ -1,4 +1,4 @@
-import { ApolloServer, gql } from 'apollo-server-express'
+import { ApolloServer, gql, SchemaDirectiveVisitor } from 'apollo-server-express'
 import { ApolloEngine } from 'apollo-engine'
 import express from 'express'
 import cors from 'cors'
@@ -26,7 +26,8 @@ const server = new ApolloServer({
   cacheControl: true,
   engine: false,
   context: { loaders },
-  validationRules: [depthLimit(5)]
+  validationRules: [depthLimit(5)],
+  introspection: true
 })
 
 server.applyMiddleware({ app })
